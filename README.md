@@ -179,7 +179,15 @@ _Note: Replace `{trackId}` with actual track ID._
 
 ## Testing
 
-After application running open new terminal and enter:
+**⚠️ IMPORTANT: Make sure the application is running before running tests!**
+
+Start the application in one terminal:
+
+```bash
+npm start
+```
+
+Then in another terminal, run tests:
 
 To run all tests without authorization
 
