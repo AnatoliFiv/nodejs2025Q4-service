@@ -72,7 +72,7 @@ components:
           format: uuid
         name:
           type: string
-          example: The Show Must Go On
+          example: 'The Show Must Go On'
         artistId:
           type: string
           format: uuid
@@ -139,8 +139,8 @@ paths:
                   type: string
                   description: Password
               required:
-                - user
                 - login
+                - password
       responses:
         200:
           description: Successful login.
@@ -148,10 +148,10 @@ paths:
             application/json:
               schema:
                 type: object
+                description: JWT Token
                 properties:
                   token:
                     type: string
-                description: JWT Token
         403:
           description: Incorrect login or password
   /signup:
@@ -204,6 +204,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+              example:
+                - id: '550e8400-e29b-41d4-a716-446655440000'
+                  login: 'TestUser'
+                  version: 1
+                  createdAt: 1655000000
+                  updatedAt: 1655000000
         401:
           $ref: '#/components/responses/UnauthorizedError'
     post:
@@ -235,6 +241,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+              example:
+                id: '550e8400-e29b-41d4-a716-446655440000'
+                login: 'TestUser'
+                version: 1
+                createdAt: 1655000000
+                updatedAt: 1655000000
         400:
           description: Bad request. body does not contain required fields
         401:
@@ -246,6 +258,7 @@ paths:
         required: true
         schema:
           type: string
+          format: uuid
     get:
       tags:
         - Users
@@ -258,6 +271,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+              example:
+                id: '550e8400-e29b-41d4-a716-446655440000'
+                login: 'TestUser'
+                version: 1
+                createdAt: 1655000000
+                updatedAt: 1655000000
         400:
           description: Bad request. userId is invalid (not uuid)
         401:
@@ -349,6 +368,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Track'
+              example:
+                - id: '550e8400-e29b-41d4-a716-446655440001'
+                  name: 'The Show Must Go On'
+                  artistId: '550e8400-e29b-41d4-a716-446655440002'
+                  albumId: '550e8400-e29b-41d4-a716-446655440003'
+                  duration: 262
         401:
           $ref: '#/components/responses/UnauthorizedError'
     post:
@@ -384,6 +409,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Track'
+              example:
+                id: '550e8400-e29b-41d4-a716-446655440001'
+                name: 'The Show Must Go On'
+                artistId: '550e8400-e29b-41d4-a716-446655440002'
+                albumId: '550e8400-e29b-41d4-a716-446655440003'
+                duration: 262
         400:
           description: Bad request. body does not contain required fields
         401:
@@ -408,6 +439,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Track'
+              example:
+                id: '550e8400-e29b-41d4-a716-446655440001'
+                name: 'The Show Must Go On'
+                artistId: '550e8400-e29b-41d4-a716-446655440002'
+                albumId: '550e8400-e29b-41d4-a716-446655440003'
+                duration: 262
         400:
           description: Bad request. trackId is invalid (not uuid)
         401:
@@ -507,6 +544,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Album'
+              example:
+                - id: '550e8400-e29b-41d4-a716-446655440003'
+                  name: 'Innuendo'
+                  year: 1991
+                  artistId: '550e8400-e29b-41d4-a716-446655440002'
         401:
           $ref: '#/components/responses/UnauthorizedError'
     post:
@@ -540,6 +582,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Album'
+              example:
+                id: '550e8400-e29b-41d4-a716-446655440003'
+                name: 'Innuendo'
+                year: 1991
+                artistId: '550e8400-e29b-41d4-a716-446655440002'
         400:
           description: Bad request. body does not contain required fields
         401:
@@ -564,6 +611,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Album'
+              example:
+                id: '550e8400-e29b-41d4-a716-446655440003'
+                name: 'Innuendo'
+                year: 1991
+                artistId: '550e8400-e29b-41d4-a716-446655440002'
         400:
           description: Bad request. albumId is invalid (not uuid)
         401:
@@ -636,6 +688,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Artist'
+              example:
+                - id: '550e8400-e29b-41d4-a716-446655440002'
+                  name: 'Freddie Mercury'
+                  grammy: false
         401:
           $ref: '#/components/responses/UnauthorizedError'
     post:
@@ -664,6 +720,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Artist'
+              example:
+                id: '550e8400-e29b-41d4-a716-446655440002'
+                name: 'Freddie Mercury'
+                grammy: false
         400:
           description: Bad request. body does not contain required fields
         401:
@@ -688,6 +748,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Artist'
+              example:
+                id: '550e8400-e29b-41d4-a716-446655440002'
+                name: 'Freddie Mercury'
+                grammy: false
         400:
           description: Bad request. artistId is invalid (not uuid)
         401:
@@ -753,6 +817,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Favorites'
+              example:
+                artists:
+                  - id: '550e8400-e29b-41d4-a716-446655440002'
+                    name: 'Freddie Mercury'
+                    grammy: false
+                albums:
+                  - id: '550e8400-e29b-41d4-a716-446655440003'
+                    name: 'Innuendo'
+                    year: 1991
+                    artistId: '550e8400-e29b-41d4-a716-446655440002'
+                tracks:
+                  - id: '550e8400-e29b-41d4-a716-446655440001'
+                    name: 'The Show Must Go On'
+                    artistId: '550e8400-e29b-41d4-a716-446655440002'
+                    albumId: '550e8400-e29b-41d4-a716-446655440003'
+                    duration: 262
         401:
           $ref: '#/components/responses/UnauthorizedError'
   /favs/track/{id}:
