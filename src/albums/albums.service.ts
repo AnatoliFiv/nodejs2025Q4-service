@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef,
+} from '@nestjs/common';
 import { IAlbumsRepository } from './repositories/albums.repository.interface';
 import { Album } from './entities/album.entity';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -11,7 +16,9 @@ export class AlbumsService {
   constructor(
     @Inject('IAlbumsRepository')
     private readonly albumsRepository: IAlbumsRepository,
+    @Inject(forwardRef(() => TracksService))
     private readonly tracksService: TracksService,
+    @Inject(forwardRef(() => FavoritesService))
     private readonly favoritesService: FavoritesService,
   ) {}
 
