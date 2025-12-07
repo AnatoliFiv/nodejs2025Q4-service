@@ -58,6 +58,13 @@ export class UsersTypeOrmRepository implements IUsersRepository {
 
   private toDomain(entity: UserEntity): User {
     const { id, login, password, version, createdAt, updatedAt } = entity;
-    return { id, login, password, version, createdAt, updatedAt };
+    return {
+      id,
+      login,
+      password,
+      version: Number(version),
+      createdAt: Number(createdAt),
+      updatedAt: Number(updatedAt),
+    };
   }
 }
