@@ -4,6 +4,8 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
+    "assets": ["**/*.ts"],
+    "watchAssets": true,
     "webpackOptions": {
       "watchOptions": {
         "poll": 100,

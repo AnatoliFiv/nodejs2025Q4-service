@@ -22,10 +22,10 @@ services:
       start_period: 10s
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: flexanatoly/home-library:latest
     container_name: home-library-app
+    profiles:
+      - production
     environment:
       NODE_ENV: production
       PORT: ${PORT:-4000}
@@ -54,9 +54,11 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     container_name: home-library-app-dev
+    profiles:
+      - development
     environment:
       NODE_ENV: development
-      PORT: ${PORT:-4000}
+      PORT: 4000
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USERNAME: ${DB_USERNAME:-postgres}
@@ -65,7 +67,7 @@ services:
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
     ports:
-      - "${PORT:-4000}:4000"
+      - "${PORT_DEV:-4001}:4000"
     volumes:
       - ./src:/app/src
       - ./package.json:/app/package.json
