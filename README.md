@@ -45,7 +45,10 @@ curl http://localhost:4000/user
 
 ## Development Mode
 
-**⚠️ IMPORTANT: Ports 4000 and 4001 must be free!**
+1. **Ports 4000 and 4001 must be free!**
+2. **Purpose:** This mode is designed **exclusively for Hot-Reload functionality**.
+3. **Testing:** Do not run tests in this mode (use Production mode for testing).
+4. **Container Restart:** Do not attempt to verify the `restart: always` policy in this mode. The watcher (`nest start --watch`) intentionally intercepts application crashes to keep the container running for further code changes. 
 
 Development mode includes **hot-reload** - code changes in `src/` directory are automatically reflected in the running container without restart.
 
@@ -410,26 +413,41 @@ _Note: Replace `{trackId}` with actual track ID._
 
 **For Docker:**
 
-- Make sure production or development containers are running
-- PostgreSQL will be started automatically with Docker
+- Ensure the production container is active: `docker-compose --profile production up app -d`.
+- _Note: Testing against development container is not supported due to port configuration._
 
-**For local testing:**
+To manually test that the container recovers from a crash:
 
-- Make sure PostgreSQL is running locally
-- Make sure application is running (`npm start`)
+1.  **Modify `src/app.service.ts`** to simulate a crash:
+    ```typescript
+    import { Injectable } from '@nestjs/common';
+    @Injectable()
+    export class AppService {
+      getHello() {
+        // Crash the application after 3 seconds
+        setTimeout(() => {
+          console.error('💥💥💥 EXITING WITH CODE 1 💥💥💥');
+          process.exit(1);
+        }, 3000);
+      }
+    }
+    ```
+2.  **Update `docker-compose.yml`** to build the production image from your local source (with the crash code) instead of pulling it from Docker Hub.
+    Find the `app` service and change it as follows:
+    ```yaml
+    app:
+      # image: flexanatoly/home-library:latest  # <--- Comment this out
+      build:                                    # <--- Add this block
+        context: .
+        dockerfile: Dockerfile
+    ```
+3.  **Rebuild and run:**
+    ```bash
+    docker-compose --profile production up --build app
+    ```
+4.  **Check Logs:**
+    Open Docker Desktop dashboard or view logs in terminal. When you access the API, you will see the error message and confirm that Docker automatically restarts the container.
 
-Then run tests:
-
-```bash
-# All tests (without auth)
-npm run test
-
-# Tests with authorization
-npm run test:auth
-
-# Specific test suite
-npm run test -- <path-to-suite>
-```
 
 ### Security scanning
 
