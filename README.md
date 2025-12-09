@@ -429,6 +429,7 @@ To manually test that the container recovers from a crash:
           console.error('💥💥💥 EXITING WITH CODE 1 💥💥💥');
           process.exit(1);
         }, 3000);
+        return 'Hello World!';
       }
     }
     ```
