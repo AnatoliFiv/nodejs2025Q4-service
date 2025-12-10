@@ -4,6 +4,7 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { IUsersRepository } from './repositories/users.repository.interface';
 import { User, UserResponseDto } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -30,9 +31,11 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+
     const user = await this.usersRepository.create({
       login: createUserDto.login,
-      password: createUserDto.password,
+      password: hashedPassword,
     });
     return this.excludePassword(user);
   }
@@ -46,12 +49,22 @@ export class UsersService {
       throw new NotFoundException(`User with id ${id} not found`);
     }
 
-    if (user.password !== updatePasswordDto.oldPassword) {
+    const isOldPasswordValid = await bcrypt.compare(
+      updatePasswordDto.oldPassword,
+      user.password,
+    );
+
+    if (!isOldPasswordValid) {
       throw new ForbiddenException('Old password is wrong');
     }
 
+    const hashedNewPassword = await bcrypt.hash(
+      updatePasswordDto.newPassword,
+      10,
+    );
+
     const updatedUser = await this.usersRepository.update(id, {
-      password: updatePasswordDto.newPassword,
+      password: hashedNewPassword,
       version: user.version + 1,
     });
 

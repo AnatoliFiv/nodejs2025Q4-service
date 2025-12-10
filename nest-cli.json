@@ -1,4 +1,17 @@
 {
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "assets": ["**/*.ts"],
+    "watchAssets": true,
+    "webpackOptions": {
+      "watchOptions": {
+        "poll": 100,
+        "aggregateTimeout": 100,
+        "ignored": ["**/node_modules", "**/dist"]
+      }
+    }
+  }
 }
