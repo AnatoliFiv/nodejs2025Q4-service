@@ -7,7 +7,6 @@ import * as path from 'node:path';
 import * as yaml from 'js-yaml';
 import 'dotenv/config';
 import { LoggingService } from './common/logging/logging.service';
-import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
@@ -28,7 +27,6 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalInterceptors(new LoggingInterceptor(loggingService));
   app.useGlobalFilters(new HttpExceptionFilter(loggingService));
 
   try {
