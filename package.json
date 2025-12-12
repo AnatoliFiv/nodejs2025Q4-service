@@ -30,7 +30,8 @@
     "migration:run": "npm run typeorm -- migration:run -d src/config/data-source.ts",
     "migration:revert": "npm run typeorm -- migration:revert -d src/config/data-source.ts",
     "migration:show": "npm run typeorm -- migration:show -d src/config/data-source.ts",
-    "scan:vulnerabilities": "npm audit --audit-level=moderate"
+    "scan:vulnerabilities": "npm audit --audit-level=moderate",
+    "scan:image": "docker scout cves flexanatoly/home-library:latest && docker scout cves postgres:alpine || echo 'Note: docker scout requires Docker Desktop with Scout enabled. Alternatively, use: docker run --rm aquasec/trivy image flexanatoly/home-library:latest && docker run --rm aquasec/trivy image postgres:alpine'"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.16",

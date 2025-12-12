@@ -45,10 +45,10 @@ curl http://localhost:4000/user
 
 ## Development Mode
 
-1. **Ports 4000 and 4001 must be free!**
+1. **Port 4000 must be free!**
 2. **Purpose:** This mode is designed **exclusively for Hot-Reload functionality**.
 3. **Testing:** Do not run tests in this mode (use Production mode for testing).
-4. **Container Restart:** Do not attempt to verify the `restart: always` policy in this mode. The watcher (`nest start --watch`) intentionally intercepts application crashes to keep the container running for further code changes. 
+4. **Container Restart:** Do not attempt to verify the `restart: always` policy in this mode. The watcher (`nest start --watch`) intentionally intercepts application crashes to keep the container running for further code changes.
 
 Development mode includes **hot-reload** - code changes in `src/` directory are automatically reflected in the running container without restart.
 
@@ -66,15 +66,15 @@ docker-compose --profile development logs -f app-dev
 # Press Ctrl+C when you see "Application is running on: http://[::]:4000"
 
 # 4. Verify it's working
-# Open in browser: http://localhost:4001/doc/
+# Open in browser: http://localhost:4000/doc/
 # Or test with curl:
-curl http://localhost:4001/user
+curl http://localhost:4000/user
 ```
 
 **Application available at:**
 
-- **API:** http://localhost:4001
-- **Documentation:** http://localhost:4001/doc/
+- **API:** http://localhost:4000
+- **Documentation:** http://localhost:4000/doc/
 
 **What happens:**
 
@@ -90,7 +90,7 @@ curl http://localhost:4001/user
 - No need to rebuild the container or restart manually
 - View logs to see changes: `docker-compose --profile development logs -f app-dev`
 
-**Note:** Development mode runs on port 4001 to avoid conflicts with production (port 4000).
+**Note:** Development mode runs on port 4000 (same as production). Make sure to stop production container before starting development mode.
 
 ## Production Mode (Detailed)
 
@@ -143,13 +143,28 @@ If the application doesn't start:
 
 ## Security Scanning
 
-Scan for security vulnerabilities in dependencies:
+**Scan for vulnerabilities in dependencies:**
 
 ```bash
 npm run scan:vulnerabilities
 ```
 
-This will check all dependencies for known security issues. The script uses `npm audit` with moderate audit level.
+This will check all npm dependencies for known security issues. The script uses `npm audit` with moderate audit level.
+
+**Scan Docker images for vulnerabilities:**
+
+```bash
+npm run scan:image
+```
+
+This will scan both Docker images (`flexanatoly/home-library:latest` and `postgres:alpine`) for security vulnerabilities using Docker Scout (requires Docker Desktop with Scout enabled).
+
+**Alternative:** If Docker Scout is not available, you can use Trivy:
+
+```bash
+docker run --rm aquasec/trivy image flexanatoly/home-library:latest
+docker run --rm aquasec/trivy image postgres:alpine
+```
 
 ## Useful Commands
 
@@ -290,14 +305,11 @@ Similar endpoints are available for `/artist`, `/album`, `/track`, and `/favs`.
 
 For detailed API documentation, visit:
 
-- **Production mode:** http://localhost:4000/doc/
-- **Development mode:** http://localhost:4001/doc/
+- **API Documentation:** http://localhost:4000/doc/
 
 ### Example requests for Postman
 
 Copy these curl commands and paste in Postman.
-
-**Note:** Replace `localhost:4000` with `localhost:4001` if you're using development mode.
 
 #### Create a User
 
@@ -411,10 +423,15 @@ _Note: Replace `{trackId}` with actual track ID._
 
 **⚠️ IMPORTANT: Application must be running before running tests!**
 
-**For Docker:**
+**For Docker Production:**
 
 - Ensure the production container is active: `docker-compose --profile production up app -d`.
-- _Note: Testing against development container is not supported due to port configuration._
+- Tests will connect to `http://localhost:4000` (default PORT from .env).
+
+**For Docker Development:**
+
+- Ensure the development container is active: `docker-compose --profile development up app-dev -d`.
+- Tests will connect to `http://localhost:4000` (default PORT from .env).
 
 To manually test that the container recovers from a crash:
 
@@ -438,7 +455,7 @@ To manually test that the container recovers from a crash:
     ```yaml
     app:
       # image: flexanatoly/home-library:latest  # <--- Comment this out
-      build:                                    # <--- Add this block
+      build: # <--- Add this block
         context: .
         dockerfile: Dockerfile
     ```
@@ -448,7 +465,6 @@ To manually test that the container recovers from a crash:
     ```
 4.  **Check Logs:**
     Open Docker Desktop dashboard or view logs in terminal. When you access the API, you will see the error message and confirm that Docker automatically restarts the container.
-
 
 ### Security scanning
 
