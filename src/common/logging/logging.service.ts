@@ -8,15 +8,15 @@ export class LoggingService implements LoggerService {
     this.logLevel = parseInt(process.env.LOG_LEVEL || '2', 10);
   }
 
-  verbose(message: string, context?: string) {
+  error(message: string, trace?: string, context?: string) {
     if (this.shouldLog(0)) {
-      this.writeLog('VERBOSE', message, context);
+      this.writeLog('ERROR', message, context, trace);
     }
   }
 
-  debug(message: string, context?: string) {
+  warn(message: string, context?: string) {
     if (this.shouldLog(1)) {
-      this.writeLog('DEBUG', message, context);
+      this.writeLog('WARN', message, context);
     }
   }
 
@@ -26,20 +26,19 @@ export class LoggingService implements LoggerService {
     }
   }
 
-  warn(message: string, context?: string) {
+  debug(message: string, context?: string) {
     if (this.shouldLog(3)) {
-      this.writeLog('WARN', message, context);
+      this.writeLog('DEBUG', message, context);
     }
   }
 
-  error(message: string, trace?: string, context?: string) {
+  verbose(message: string, context?: string) {
     if (this.shouldLog(4)) {
-      this.writeLog('ERROR', message, context, trace);
+      this.writeLog('VERBOSE', message, context);
     }
   }
 
   private shouldLog(level: number): boolean {
-    // Логируются все уровни <= установленного (более низкие числа = более высокий приоритет)
     return level <= this.logLevel;
   }
 
