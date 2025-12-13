@@ -64,6 +64,9 @@ services:
       DB_USERNAME: ${DB_USERNAME:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
       DB_DATABASE: ${DB_DATABASE:-home_library_fiv}
+      LOG_LEVEL: ${LOG_LEVEL:-2}
+      LOG_MAX_FILE_SIZE_KB: ${LOG_MAX_FILE_SIZE_KB:-1024}
+      LOG_MAX_BACKUPS: ${LOG_MAX_BACKUPS:-5}
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
     ports:
@@ -74,6 +77,7 @@ services:
       - ./tsconfig.json:/app/tsconfig.json
       - ./tsconfig.build.json:/app/tsconfig.build.json
       - ./nest-cli.json:/app/nest-cli.json
+      - ./logs:/app/logs
     networks:
       - home-library-network
     depends_on:
