@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from 'dotenv';
 import { AppController } from './app.controller';
@@ -8,16 +8,21 @@ import { ArtistsModule } from './artists/artists.module';
 import { AlbumsModule } from './albums/albums.module';
 import { TracksModule } from './tracks/tracks.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { LoggingModule } from './common/logging/logging.module';
+import { AuthModule } from './auth/auth.module';
 import { UserEntity } from './users/entities/user.typeorm.entity';
 import { ArtistEntity } from './artists/entities/artist.typeorm.entity';
 import { AlbumEntity } from './albums/entities/album.typeorm.entity';
 import { TrackEntity } from './tracks/entities/track.typeorm.entity';
 import { FavoritesEntity } from './favorites/entities/favorites.typeorm.entity';
+import { LoggingMiddleware } from './common/logging/logging.middleware';
 
 config();
 
 @Module({
   imports: [
+    LoggingModule,
+    AuthModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -44,4 +49,8 @@ config();
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(LoggingMiddleware).forRoutes('*');
+  }
+}

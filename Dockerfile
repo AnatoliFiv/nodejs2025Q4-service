@@ -42,6 +42,10 @@ COPY --chown=nestjs:nodejs --from=builder /app/src/favorites/entities ./src/favo
 COPY --chown=nestjs:nodejs --from=builder /app/tsconfig.json ./tsconfig.json
 COPY --chown=nestjs:nodejs --from=builder /app/doc ./doc
 
+RUN mkdir -p ./logs && \
+    chown -R nestjs:nodejs ./logs && \
+    chmod -R 777 ./logs
+
 USER nestjs
 
 EXPOSE 4000
