@@ -10,6 +10,7 @@ RUN npm ci
 
 COPY tsconfig*.json nest-cli.json ./
 COPY src ./src
+COPY doc ./doc
 
 EXPOSE 4000
 

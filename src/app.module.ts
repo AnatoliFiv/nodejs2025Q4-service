@@ -9,6 +9,7 @@ import { AlbumsModule } from './albums/albums.module';
 import { TracksModule } from './tracks/tracks.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { LoggingModule } from './common/logging/logging.module';
+import { AuthModule } from './auth/auth.module';
 import { UserEntity } from './users/entities/user.typeorm.entity';
 import { ArtistEntity } from './artists/entities/artist.typeorm.entity';
 import { AlbumEntity } from './albums/entities/album.typeorm.entity';
@@ -21,6 +22,7 @@ config();
 @Module({
   imports: [
     LoggingModule,
+    AuthModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,

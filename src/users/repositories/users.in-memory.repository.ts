@@ -47,4 +47,8 @@ export class UsersInMemoryRepository implements IUsersRepository {
     this.users.splice(index, 1);
     return true;
   }
+
+  async findByLogin(login: string): Promise<User | null> {
+    return this.users.find((user) => user.login === login) || null;
+  }
 }

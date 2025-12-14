@@ -8,6 +8,9 @@ import * as yaml from 'js-yaml';
 import 'dotenv/config';
 import { LoggingService } from './common/logging/logging.service';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { JwtService } from '@nestjs/jwt';
+import { Reflector } from '@nestjs/core';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -28,6 +31,10 @@ async function bootstrap() {
   );
 
   app.useGlobalFilters(new HttpExceptionFilter(loggingService));
+
+  const jwtService = app.get(JwtService);
+  const reflector = app.get(Reflector);
+  app.useGlobalGuards(new JwtAuthGuard(jwtService, reflector));
 
   try {
     const apiYamlPath = path.join(process.cwd(), 'doc', 'api.yaml');

@@ -5,4 +5,6 @@ export interface IUsersRepository
   extends IBaseRepository<
     User,
     Omit<User, 'id' | 'version' | 'createdAt' | 'updatedAt'>
-  > {}
+  > {
+  findByLogin(login: string): Promise<User | null>;
+}

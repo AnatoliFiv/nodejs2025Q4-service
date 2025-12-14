@@ -56,6 +56,11 @@ export class UsersTypeOrmRepository implements IUsersRepository {
     return result.affected !== undefined && result.affected > 0;
   }
 
+  async findByLogin(login: string): Promise<User | null> {
+    const entity = await this.repository.findOne({ where: { login } });
+    return entity ? this.toDomain(entity) : null;
+  }
+
   private toDomain(entity: UserEntity): User {
     const { id, login, password, version, createdAt, updatedAt } = entity;
     return {
