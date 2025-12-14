@@ -1,6 +1,12 @@
-import { Injectable, ForbiddenException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  ForbiddenException,
+  Inject,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { RefreshDto } from './dto/refresh.dto';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
 import { TokenResponseDto } from './dto/token-response.dto';
@@ -46,6 +52,30 @@ export class AuthService {
     const refreshToken = this.generateRefreshToken(payload);
 
     return { accessToken, refreshToken };
+  }
+
+  async refresh(refreshDto: RefreshDto): Promise<TokenResponseDto> {
+    if (!refreshDto.refreshToken) {
+      throw new UnauthorizedException('Refresh token not provided');
+    }
+
+    try {
+      const secret = process.env.JWT_SECRET_REFRESH_KEY || 'secret123123';
+
+      const payload = this.jwtService.verify(refreshDto.refreshToken, {
+        secret,
+      });
+
+      const { userId, login } = payload;
+      const newPayload = { userId, login };
+
+      return {
+        accessToken: this.generateAccessToken(newPayload),
+        refreshToken: this.generateRefreshToken(newPayload),
+      };
+    } catch (error) {
+      throw new ForbiddenException('Refresh token is invalid or expired');
+    }
   }
 
   private generateAccessToken(payload: {
