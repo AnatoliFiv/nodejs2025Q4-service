@@ -126,7 +126,7 @@ Variable	Value	Description
 | :--- | :--- |:---------------------------------------------------|
 | `LOG_LEVEL` | `2` | 0: ERROR, 1: WARN, 1, LOG: 2, DEBUG: 3, VERBOSE: 4 |
 
-**LOG_MAX_FILE_SIZE_KB=10**	Size of log file (KB) before rotation.<br>
+**LOG_MAX_FILE_SIZE_KB=50**	Size of log file (KB) before rotation.<br>
 **LOG_MAX_BACKUPS=5**	Number of rotated files to keep.
 
 📦 **Database & General Variable**
@@ -137,6 +137,7 @@ DB_HOST	localhost	(For local run only). Docker uses service name postgres
 Swagger UI
 Available at: http://localhost:4000/doc/ (NOT part of this task requirements) 
 
+***Postman Collection for tests***
 <details> <summary><strong>📦 Click to view / copy Postman Collection JSON</strong></summary>
 
 Do not forget change user name
@@ -350,7 +351,6 @@ Do not forget change user name
 
 ## 📂 Project Structure
 
-### 🔌 API Endpoints (brief)
 
 #### 🔓 Authentication (Public)
 ```text
@@ -449,11 +449,11 @@ Scans the built production image for system-level vulnerabilities (using Docker 
 ### Auto-fix and format
 
 ```bash
-npm run lint
+  npm run lint
 ```
 
 ```bash
-npm run format
+  npm run format
 ```
 
 ### Debugging in VSCode
