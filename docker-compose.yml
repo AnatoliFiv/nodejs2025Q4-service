@@ -22,7 +22,10 @@ services:
       start_period: 10s
 
   app:
-    image: flexanatoly/home-library:latest
+    image: home-library-service:prod
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: home-library-app
     profiles:
       - production
@@ -34,10 +37,19 @@ services:
       DB_USERNAME: ${DB_USERNAME:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
       DB_DATABASE: ${DB_DATABASE:-home_library_fiv}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_SECRET_REFRESH_KEY: ${JWT_SECRET_REFRESH_KEY}
+      TOKEN_EXPIRE_TIME: ${TOKEN_EXPIRE_TIME}
+      TOKEN_REFRESH_EXPIRE_TIME: ${TOKEN_REFRESH_EXPIRE_TIME}
+      LOG_LEVEL: ${LOG_LEVEL:-2}
+      LOG_MAX_FILE_SIZE_KB: ${LOG_MAX_FILE_SIZE_KB:-1024}
+      LOG_MAX_BACKUPS: ${LOG_MAX_BACKUPS:-5}
     ports:
       - "${PORT:-4000}:4000"
     networks:
       - home-library-network
+    volumes:
+      - app_logs:/app/logs
     depends_on:
       postgres:
         condition: service_healthy
@@ -67,6 +79,10 @@ services:
       LOG_LEVEL: ${LOG_LEVEL:-2}
       LOG_MAX_FILE_SIZE_KB: ${LOG_MAX_FILE_SIZE_KB:-1024}
       LOG_MAX_BACKUPS: ${LOG_MAX_BACKUPS:-5}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_SECRET_REFRESH_KEY: ${JWT_SECRET_REFRESH_KEY}
+      TOKEN_EXPIRE_TIME: ${TOKEN_EXPIRE_TIME}
+      TOKEN_REFRESH_EXPIRE_TIME: ${TOKEN_REFRESH_EXPIRE_TIME}
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
     ports:
@@ -90,6 +106,8 @@ volumes:
   postgres_data:
     driver: local
   postgres_logs:
+    driver: local
+  app_logs:
     driver: local
 
 networks:
